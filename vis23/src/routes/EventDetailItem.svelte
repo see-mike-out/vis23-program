@@ -24,6 +24,10 @@
     description: "Description",
     website: "Website",
   };
+  let showFull = {
+    description: false,
+    abstract: false,
+  };
 </script>
 
 <div class="card">
@@ -31,7 +35,43 @@
     {#if item[key]}
       <div class="item">
         <span class={"name " + key}>{desc_names[key]}</span>
-        <p class={"content " + key}>{item[key]}</p>
+        {#if key === "website"}
+          <a class={"content " + key} href={item[key]} target="_blank"
+            >{item[key]}</a
+          >
+        {:else if key === "description"}
+          {#if item[key].length > 100}
+            {#if !showFull[key]}
+              <p class={"content " + key}>
+                {item[key].substring(0, 100)}...
+                <button
+                  class="show-full"
+                  on:click={() => {
+                    showFull[key] = !showFull[key];
+                  }}
+                >
+                  Show
+                </button>
+              </p>
+            {:else}
+              <p class={"content " + key}>
+                {item[key]}
+                <button
+                  class="show-full"
+                  on:click={() => {
+                    showFull[key] = !showFull[key];
+                  }}
+                >
+                  Hide
+                </button>
+              </p>
+            {/if}
+          {:else}
+            <p class={"content " + key}>{item[key]}</p>
+          {/if}
+        {:else}
+          <p class={"content " + key}>{item[key]}</p>
+        {/if}
       </div>
     {/if}
   {/each}
@@ -55,12 +95,21 @@
   .name {
     display: block;
     font-weight: 700;
-    color: #787878;
+    color: #333;
     margin-bottom: 0.15rem;
   }
   .content {
     line-height: 120%;
     margin-bottom: 0;
     margin-top: 0;
+    color: #787878;
+  }
+  .show-full {
+    appearance: none;
+    background-color: white;
+    border-radius: 0.25rem;
+    border: 1px solid #ddd;
+    font-weight: 600;
+    color: #787878;
   }
 </style>
