@@ -1,0 +1,43 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  font-family: sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+header {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 100%;
+}
+
+h3 {
+  font-size: 1rem;
+  margin: 0 0 0.25rem 0;
+}
+
+p {
+  color: #454545;
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+#notes {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
