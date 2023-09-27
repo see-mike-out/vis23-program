@@ -8,7 +8,18 @@ const AE = "Associated Event",
   PN = "Panel",
   CT = "Contest",
   DC = "Doctoral Colloquium",
-  IPP = "Invited Partnership Presentations";
+  IPP = "Invited Presentations";
+
+export const types = {
+  "Associated Event": "AE",
+  Common: "CM",
+  Break: "BK",
+  Tutorial: "TT",
+  Workshop: "WS",
+  "Full Papers": "FP",
+  "Short Papers": "SP",
+  "Invited Presentations": "IPP"
+};
 
 const RM1_2 = "Room 101-102",
   RM3 = "Room 103",
@@ -22,19 +33,6 @@ const RM1_2 = "Room 101-102",
   RM11_12 = "Room 111–112",
   RM5_6 = "Room 105–106",
   PL1 = "Plenary 1";
-
-const desc_order = [
-  "title",
-  "organizers",
-  "chair",
-  "authors",
-  "moderators",
-  "speakers",
-  "panelists",
-  "abstract",
-  "description",
-  "website"
-];
 
 let posters = [
   {
@@ -235,7 +233,7 @@ let posters = [
   }
 ];
 
-let data = [
+export let data = [
   {
     date: "Oct. 21, 2023", day: "Saturday", events: [
       {
@@ -387,7 +385,7 @@ We kindly ask potential attendees to optionally pre-register at the following ad
         venue: RM10,
         items: [{
           organizers: `Vidya Setlur, Arjun Srinivasan`,
-          description: `Natural language processing (NLP) has evolved as a promising field for visual analysis and communication. The applications of NLP for supporting various aspects of the visual analysis workflow include helping readers take away key information from charts or dashboards, supporting interaction modalities that help people naturally ``ask” questions of their data, generating data summaries and insight reports, and exploring ways to enrich the semantics of data, among others. With data-driven communication being more important than ever, how do we treat text and language as first-class citizens in helping people see and understand data? How do we couple language and charts to make the data more accessible to a variety of audiences with different needs, capabilities, and skills? As the field of NLP matures, computers now have an increased capability of interpreting language and engaging in conversations with people. But can NLP techniques and interactive visualizations work in concert to support an analytical conversation? As the platforms and channels for exploring data go beyond the desktop to chat interfaces, augmented and virtual reality environments, mobile, and large displays, how do we better understand user intent, modalities, and context to make these interactions more delightful and meaningful?
+          description: `Natural language processing (NLP) has evolved as a promising field for visual analysis and communication. The applications of NLP for supporting various aspects of the visual analysis workflow include helping readers take away key information from charts or dashboards, supporting interaction modalities that help people naturally "ask" questions of their data, generating data summaries and insight reports, and exploring ways to enrich the semantics of data, among others. With data-driven communication being more important than ever, how do we treat text and language as first-class citizens in helping people see and understand data? How do we couple language and charts to make the data more accessible to a variety of audiences with different needs, capabilities, and skills? As the field of NLP matures, computers now have an increased capability of interpreting language and engaging in conversations with people. But can NLP techniques and interactive visualizations work in concert to support an analytical conversation? As the platforms and channels for exploring data go beyond the desktop to chat interfaces, augmented and virtual reality environments, mobile, and large displays, how do we better understand user intent, modalities, and context to make these interactions more delightful and meaningful?
 Addressing these questions calls for research at the intersection of human-computer interaction, information visualization, and NLP, three fields with natural synergies but rather infrequent meetings. This workshop will assemble an interdisciplinary community that promotes collaboration across these fields, explore research opportunities and challenges, and continue to establish an agenda for NLP research specifically for data visualization.`,
           website: `https://www.nlvizworkshop2023.com/`
         }]
@@ -2224,4 +2222,12 @@ function getDuration(s, e) {
   let dur_h = Math.floor(dur_total / 60);
   let dur_m = dur_total - dur_h * 60;
   return { minutes: dur_total, expr: dur_h.toString() + ":" + dur_m.toString() };
+}
+
+export function loadBookmarks() {
+  let bookmarks = JSON.parse(localStorage.getItem("bookmarks") || "[]");
+  return bookmarks;
+}
+export function saveBookmarks(bk) {
+  localStorage.setItem("bookmarks", JSON.stringify(bk || []));
 }
