@@ -3,6 +3,7 @@
   import { loadBookmarks, saveBookmarks } from "../data";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
+  import Search from "./Search.svelte";
   let bookmarks = writable([]);
   function bookmark(b) {
     bookmarks.update((d) => {
@@ -18,6 +19,11 @@
     });
   }
   let bookmarkView = false;
+  let searchKeyword = null;
+  function setSearchFilter(key) {
+    if (!key) searchKeyword = null;
+    else searchKeyword = key;
+  }
   onMount(() => {
     bookmarks.set(loadBookmarks());
     bookmarks.subscribe((d) => {
@@ -30,7 +36,13 @@
   <h1>VIS 23 Program</h1>
 </header>
 <main class="container">
-  <TimeTable {debookmark} {bookmark} {bookmarks} {bookmarkView} />
+  <TimeTable
+    {debookmark}
+    {bookmark}
+    {bookmarks}
+    {bookmarkView}
+    {searchKeyword}
+  />
 
   <div id="notes">
     <h3>Notes</h3>
@@ -40,8 +52,16 @@
 <section id="controls">
   <div class="control-wrap">
     <div>
-      <input type="checkbox" name="bookmark-only" id="bookmark-only" bind:checked={bookmarkView}>
-      <label for="bookmark-only">Show bookmarked events only</label>
+      <Search {setSearchFilter} />
+      <div style="margin-top: 0.5rem;">
+        <input
+          type="checkbox"
+          name="bookmark-only"
+          id="bookmark-only"
+          bind:checked={bookmarkView}
+        />
+        <label for="bookmark-only">Show bookmarked events only</label>
+      </div>
     </div>
   </div>
 </section>
@@ -90,7 +110,7 @@
   }
 
   #notes {
-    padding-bottom: 3rem;
+    padding-bottom: 8rem;
     padding-top: 1rem;
   }
 
@@ -100,8 +120,9 @@
     width: 100%;
     border-top: 1px solid #ddd;
     background-color: #fff;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-size: 0.9rem;
   }
 
   .control-wrap {
@@ -109,8 +130,19 @@
     display: flex;
     justify-content: center;
   }
+  .control-wrap > div {
+    vertical-align: top;
+    line-height: 100%;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    width: 300px;
+    max-width: 100%;
+  }
 
   :global(button:focus) {
     outline: 2px solid #273d96;
+  }
+  :global(.sr-only) {
+    display: none;
   }
 </style>

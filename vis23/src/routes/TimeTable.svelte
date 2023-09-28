@@ -4,6 +4,7 @@
   export let debookmark = () => {};
   export let bookmark = () => {};
   export let bookmarks, bookmarkView;
+  export let searchKeyword = null;
 </script>
 
 {#each data as day}
@@ -11,8 +12,14 @@
     <h2>{day.date} ({day.day})</h2>
     <div class="events">
       {#each day.events as event}
-        {#if !bookmarkView || (bookmarkView && $bookmarks.includes(event.id))}
-          <EventCard {event} {debookmark} {bookmark} {bookmarks} />
+        {#if (!bookmarkView || (bookmarkView && $bookmarks.includes(event.id)))}
+          <EventCard
+            {event}
+            {debookmark}
+            {bookmark}
+            {bookmarks}
+            {searchKeyword}
+          />
         {/if}
       {/each}
     </div>

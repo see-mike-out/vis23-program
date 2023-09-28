@@ -2231,3 +2231,28 @@ export function loadBookmarks() {
 export function saveBookmarks(bk) {
   localStorage.setItem("bookmarks", JSON.stringify(bk || []));
 }
+
+export function searchMatch(keyword, event) {
+  let keywords = keyword.split(" ");
+  let flag = false, results = {};
+  for (const key of keywords) {
+    if (event.title?.includes(key)) {
+      flag = true;
+      results.title = true;
+    }
+    event.items.forEach((item, i) => {
+      Object.keys(item).forEach((prop) => {
+        if (item[prop].includes(key)) {
+          flag = true;
+          results['item.' + i] = true;
+          results['item.' + i + '.' + prop] = true;
+        }
+      });
+    })
+    if (!flag) return flag;
+  }
+  if (flag) {
+    return results;
+  }
+  return flag;
+}

@@ -1,5 +1,7 @@
 <script>
   export let item = {};
+  export let searchOutput = {};
+  export let i = -1;
   const desc_order = [
     "title",
     "organizers",
@@ -28,21 +30,32 @@
     description: false,
     abstract: false,
   };
+  $: {
+    console.log(searchOutput);
+  }
 </script>
 
-<div class="card">
+<div class={"card" + (searchOutput["item." + i] ? " searched" : "")}>
   {#each desc_order as key}
     {#if item[key]}
       <div class="item">
         <span class={"name " + key}>{desc_names[key]}</span>
         {#if key === "website"}
-          <a class={"content " + key} href={item[key]} target="_blank"
-            >{item[key]}</a
+          <a
+            class={"content " +
+              key +
+              (searchOutput["item." + i + "." + key] ? " searched" : "")}
+            href={item[key]}
+            target="_blank">{item[key]}</a
           >
         {:else if key === "description"}
           {#if item[key].length > 100}
             {#if !showFull[key]}
-              <p class={"content " + key}>
+              <p
+                class={"content " +
+                  key +
+                  (searchOutput["item." + i + "." + key] ? " searched" : "")}
+              >
                 {item[key].substring(0, 100)}...
                 <button
                   class="show-full"
@@ -54,7 +67,11 @@
                 </button>
               </p>
             {:else}
-              <p class={"content " + key}>
+              <p
+                class={"content " +
+                  key +
+                  (searchOutput["item." + i + "." + key] ? " searched" : "")}
+              >
                 {item[key]}
                 <button
                   class="show-full"
@@ -67,10 +84,22 @@
               </p>
             {/if}
           {:else}
-            <p class={"content " + key}>{item[key]}</p>
+            <p
+              class={"content " +
+                key +
+                (searchOutput["item." + i + "." + key] ? " searched" : "")}
+            >
+              {item[key]}
+            </p>
           {/if}
         {:else}
-          <p class={"content " + key}>{item[key]}</p>
+          <p
+            class={"content " +
+              key +
+              (searchOutput["item." + i + "." + key] ? " searched" : "")}
+          >
+            {item[key]}
+          </p>
         {/if}
       </div>
     {/if}
@@ -84,6 +113,9 @@
     border: 1px solid #ddd;
     margin-bottom: 0.5rem;
     padding: 0.5rem;
+  }
+  div.card.searched {
+    border: 2px solid #15ab60;
   }
   div.item {
     font-size: 0.9rem;
@@ -103,6 +135,11 @@
     margin-bottom: 0;
     margin-top: 0;
     color: #787878;
+  }
+  .content.searched {
+    color: #15ab60;
+    background-color: rgba(255, 252, 166, 0.5);
+    font-weight: 700;
   }
   .show-full {
     appearance: none;

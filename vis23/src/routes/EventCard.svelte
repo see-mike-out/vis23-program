@@ -3,69 +3,86 @@
   export let debookmark = () => {};
   export let bookmark = () => {};
   export let bookmarks;
-  import { types } from "../data";
+  export let searchKeyword = "";
+  import { types, searchMatch } from "../data";
   import EventDetailItem from "./EventDetailItem.svelte";
+  let searchOutput;
   let detailView = false;
+  $: {
+    if (searchKeyword) {
+      searchOutput = searchMatch(searchKeyword, event);
+      if (searchOutput) detailView = true;
+    } else {
+      searchOutput = undefined;
+      detailView = false;
+    }
+  }
 </script>
 
-<article
-  class={(types[event.type] || "others") + (detailView ? " details" : "")}
->
-  {#if !detailView}
-    <div class="event-meta">
+{#if !searchKeyword || searchOutput}
+  <article
+    class={(types[event.type] || "others") + (detailView ? " details" : "")}
+  >
+    {#if !detailView}
+      <div class="event-meta">
+        <span class="time">{event.start_time}—{event.end_time}</span>
+        {#if event.venue}<span class="venue">{event.venue}</span>{/if}
+        {#if $bookmarks?.includes(event.id)}💚{/if}
+      </div>
+    {/if}
+    <div class="event-content">
+      <button
+        aria-roledescription="button"
+        on:click={() => {
+          if (event.items.length > 0) {
+            detailView = !detailView;
+          }
+        }}
+        on:keydown={(e) => {
+          if (e.key === "enter" && event.items.length > 0) {
+            detailView = !detailView;
+          }
+        }}
+      >
+        <span class="type">{event.type}</span>
+        <span class={"title" + (searchOutput?.title ? " searched" : "")}
+          >{event.title}
+        </span>
+        {#if detailView}
+          <span class="collapse">Close</span>
+        {/if}
+      </button>
+    </div>
+  </article>
+  {#if detailView}
+    <div class="event-meta-2">
       <span class="time">{event.start_time}—{event.end_time}</span>
       {#if event.venue}<span class="venue">{event.venue}</span>{/if}
-      {#if $bookmarks?.includes(event.id)}💚{/if}
+    </div>
+    <div class="event-meta-2">
+      {#if $bookmarks?.includes(event.id)}
+        💚 Bookmarked (<button
+          on:click={(e) => {
+            debookmark(event.id);
+          }}>Remove</button
+        >)
+      {:else}
+        🤍 <button
+          on:click={(e) => {
+            bookmark(event.id);
+          }}>Add to the bookmark</button
+        >
+      {/if}
+    </div>
+
+    <div class="event-detail">
+      {#each event.items as item, i}
+        {#if !searchOutput || (searchOutput && searchOutput["item." + i])}
+          <EventDetailItem {item} {i} {searchOutput} />
+        {/if}
+      {/each}
     </div>
   {/if}
-  <div class="event-content">
-    <button
-      aria-roledescription="button"
-      on:click={() => {
-        if (event.items.length > 0) {
-          detailView = !detailView;
-        }
-      }}
-      on:keydown={(e) => {
-        if (e.key === "enter" && event.items.length > 0) {
-          detailView = !detailView;
-        }
-      }}
-    >
-      <span class="type">{event.type}</span>
-      <span class="title">{event.title} </span>
-      {#if detailView}
-        <span class="collapse">Close</span>
-      {/if}
-    </button>
-  </div>
-</article>
-{#if detailView}
-  <div class="event-meta-2">
-    <span class="time">{event.start_time}—{event.end_time}</span>
-    {#if event.venue}<span class="venue">{event.venue}</span>{/if}
-  </div>
-  <div class="event-meta-2">
-    {#if $bookmarks?.includes(event.id)}
-      💚 Bookmarked (<button
-        on:click={(e) => {
-          debookmark(event.id);
-        }}>Remove</button
-      >)
-    {:else}
-      🤍 <button
-        on:click={(e) => {
-          bookmark(event.id);
-        }}>Add to the bookmark</button
-      >
-    {/if}
-  </div>
-
-  <div class="event-detail">
-    {#each event.items as item}
-      <EventDetailItem {item} />
-    {/each}
-  </div>
 {/if}
 
 <style>
@@ -170,6 +187,11 @@
     display: block;
     font-size: 0.85rem;
     color: #787878;
+  }
+  span.title.searched {
+    color: #15ab60;
+    background-color: rgba(255, 252, 166, 0.5);
+    font-weight: 700;
   }
 
   .event-detail {
