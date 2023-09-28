@@ -47,6 +47,7 @@
   <div id="notes">
     <h3>Notes</h3>
     <p>The dates and times are based on the AEDT timezone.</p>
+    <p>This is NOT an official source of the IEEE VIS 2023 program.</p>
   </div>
 </main>
 <section id="controls">
