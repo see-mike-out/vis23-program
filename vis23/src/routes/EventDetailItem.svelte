@@ -30,9 +30,6 @@
     description: false,
     abstract: false,
   };
-  $: {
-    console.log(searchOutput);
-  }
 </script>
 
 <div class={"card" + (searchOutput["item." + i] ? " searched" : "")}>
